@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>🔐 Admin — Questions pour Momo</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0096c7;--deep:#023e8a;--aqua:#48cae4;
+  --sand:#f4a261;--gold:#ffd166;--coral:#e76f51;
+  --hibis:#e63946;--foam:#e0f7fa;--text:#1b2838;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:#f0f4f8;min-height:100vh;}
+
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--deep),var(--teal));padding:30px 20px;text-align:center;}
+#login-screen h1{font-family:'Pacifico',cursive;color:#fff;font-size:2rem;margin-bottom:6px;}
+#login-screen p{color:var(--aqua);font-size:.9rem;font-weight:700;margin-bottom:28px;}
+.login-box{background:#fff;border-radius:20px;padding:28px 24px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.2);}
+.login-box label{display:block;font-weight:800;font-size:.82rem;color:var(--deep);margin-bottom:6px;text-align:left;}
+.login-box input{width:100%;padding:13px 16px;border:2px solid #dde8f0;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s;}
+.login-box input:focus{border-color:var(--aqua);}
+.login-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--teal),var(--deep));color:#fff;border:none;border-radius:14px;font-family:'Pacifico',cursive;font-size:1.05rem;cursor:pointer;box-shadow:0 4px 16px rgba(0,150,199,.3);}
+.login-btn:hover{opacity:.9;}
+.login-err{color:var(--hibis);font-size:.82rem;font-weight:800;margin-top:10px;display:none;}
+
+/* ── ADMIN PANEL ── */
+#admin-panel{display:none;}
+.admin-header{background:linear-gradient(135deg,var(--deep),var(--teal));padding:24px 20px 20px;text-align:center;}
+.admin-header h1{font-family:'Pacifico',cursive;color:#fff;font-size:1.8rem;}
+.admin-header p{color:var(--aqua);font-size:.85rem;font-weight:700;margin-top:4px;}
+
+/* session timer */
+.session-bar{
+  background:rgba(0,0,0,.18);
+  padding:7px 20px;text-align:center;
+  font-size:.75rem;color:rgba(255,255,255,.85);font-weight:800;letter-spacing:.3px;
+}
+.session-bar span{color:var(--gold);}
+
+.admin-toolbar{max-width:700px;margin:18px auto 0;padding:0 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;}
+.admin-toolbar > span{font-weight:800;font-size:.88rem;color:var(--deep);}
+.btn-clear{padding:8px 18px;background:var(--hibis);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;cursor:pointer;}
+.btn-clear:hover{opacity:.85;}
+.btn-export{padding:8px 18px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;cursor:pointer;}
+.btn-export:hover{opacity:.85;}
+.btn-logout{padding:8px 18px;background:#e0e0e0;color:#555;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;cursor:pointer;}
+.btn-logout:hover{background:#ccc;}
+
+.q-list{max-width:700px;margin:16px auto 80px;padding:0 16px;display:flex;flex-direction:column;gap:12px;}
+.q-empty{text-align:center;padding:60px 20px;font-family:'Pacifico',cursive;color:#aaa;font-size:1.1rem;}
+.q-empty .big{font-size:3rem;display:block;margin-bottom:10px;}
+
+.q-card{background:#fff;border-radius:18px;box-shadow:0 4px 18px rgba(0,100,180,.09);padding:18px 18px 16px;border-left:5px solid var(--aqua);animation:slideIn .3s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.q-card.answered{border-left-color:var(--sand);}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.q-num{font-size:.72rem;color:#ccc;font-weight:800;margin-bottom:4px;}
+.q-date{font-size:.72rem;color:#aaa;font-weight:700;}
+.q-text{font-size:.95rem;color:var(--text);font-weight:700;line-height:1.55;}
+.q-actions{display:flex;gap:8px;margin-top:12px;}
+.btn-done{padding:6px 14px;background:var(--sand);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.75rem;cursor:pointer;}
+.btn-done:hover{opacity:.85;}
+.btn-del{padding:6px 14px;background:#f0f0f0;color:#999;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.75rem;cursor:pointer;}
+.btn-del:hover{background:var(--hibis);color:#fff;}
+.answered-badge{display:inline-block;background:#e8f8f0;color:#2d9a6a;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:6px;}
+
+.footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);padding:9px 0 13px;text-align:center;border-top:2px solid #b2ebf2;font-size:.75rem;color:var(--teal);font-weight:800;z-index:99;}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div id="login-screen">
+  <h1>🔐 Espace Admin</h1>
+  <p>Questions pour Momo — accès privé</p>
+  <div class="login-box">
+    <label>Mot de passe</label>
+    <input type="password" id="pwd" placeholder="••••••••">
+    <button class="login-btn" onclick="login()">🌺 Accéder</button>
+    <div class="login-err" id="login-err">Mot de passe incorrect !</div>
+  </div>
+</div>
+
+<!-- ════ ADMIN PANEL ════ -->
+<div id="admin-panel">
+  <div class="admin-header">
+    <h1>🌺 Questions pour Momo</h1>
+    <p id="admin-subtitle">Chargement…</p>
+  </div>
+  <div class="session-bar">Session active encore <span id="session-timer">30:00</span> — <a href="#" onclick="logout()" style="color:var(--gold);text-decoration:none;font-weight:900;">Se déconnecter</a></div>
+
+  <div class="admin-toolbar">
+    <span id="toolbar-count">0 question</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn-export" onclick="exportTxt()">📋 Exporter</button>
+    </div>
+  </div>
+
+  <div class="q-list" id="q-list"></div>
+</div>
+
+<div class="footer">🔐 &nbsp; Admin — Anniversaire de Momo &nbsp; 🌺</div>
+
+<script>
+// ════════════════════════════
+// CHANGE LE MOT DE PASSE ICI
+const MOT_DE_PASSE = "momo60ans";
+const SESSION_DUREE = 30 * 60 * 1000; // 30 minutes en ms
+// ════════════════════════════
+
+let timerInterval = null;
+
+// ── Vérifier session au chargement ──
+window.addEventListener('load', () => {
+  const expiry = localStorage.getItem('momo_admin_expiry');
+  if (expiry && Date.now() < parseInt(expiry)) {
+    showAdmin();
+    startTimer(parseInt(expiry) - Date.now());
+  }
+});
+
+function login() {
+  const val = document.getElementById('pwd').value;
+  if (val === MOT_DE_PASSE) {
+    const expiry = Date.now() + SESSION_DUREE;
+    localStorage.setItem('momo_admin_expiry', expiry.toString());
+    showAdmin();
+    startTimer(SESSION_DUREE);
+  } else {
+    const err = document.getElementById('login-err');
+    err.style.display = 'block';
+    document.getElementById('pwd').style.borderColor = '#e63946';
+    setTimeout(() => { err.style.display = 'none'; document.getElementById('pwd').style.borderColor = ''; }, 2500);
+  }
+}
+
+function showAdmin() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  loadQuestions();
+  setInterval(loadQuestions, 15000);
+}
+
+function logout() {
+  localStorage.removeItem('momo_admin_expiry');
+  clearInterval(timerInterval);
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pwd').value = '';
+}
+
+function startTimer(remainingMs) {
+  clearInterval(timerInterval);
+  let remaining = Math.floor(remainingMs / 1000);
+
+  function tick() {
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      logout();
+      return;
+    }
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    document.getElementById('session-timer').textContent =
+      String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    remaining--;
+  }
+  tick();
+  timerInterval = setInterval(tick, 1000);
+}
+
+// ── Questions ──
+function getQ() { try { return JSON.parse(localStorage.getItem('momo_questions') || '[]'); } catch(e) { return []; } }
+function saveQ(q) { localStorage.setItem('momo_questions', JSON.stringify(q)); }
+
+function loadQuestions() {
+  const questions = getQ();
+  const n = questions.length;
+  document.getElementById('admin-subtitle').textContent =
+    n === 0 ? 'Aucune question pour l\'instant…'
+    : n + ' question' + (n>1?'s':'') + ' reçue' + (n>1?'s':'') + ' 🎤';
+  document.getElementById('toolbar-count').textContent = n + ' question' + (n>1?'s':'');
+
+  const list = document.getElementById('q-list');
+  if (n === 0) {
+    list.innerHTML = '<div class="q-empty"><span class="big">🌊</span>Aucune question pour l\'instant.<br>Les invités n\'ont pas encore écrit !</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  // Newest first
+  [...questions].reverse().forEach((q, ri) => {
+    const i = n - 1 - ri;
+    const div = document.createElement('div');
+    div.className = 'q-card' + (q.answered ? ' answered' : '');
+    div.innerHTML = `
+      <div class="q-num">Question #${i+1}</div>
+      <div class="q-meta">
+        <span style="font-size:.75rem;color:#888;font-weight:700;">🕐 ${esc(q.date)}</span>
+        <span class="q-date">${q.answered ? '<span class="answered-badge">✅ Répondue</span>' : ''}</span>
+      </div>
+      <div class="q-text">${esc(q.question)}</div>
+      <div class="q-actions">
+        ${!q.answered ? `<button class="btn-done" onclick="markDone(${i})">✅ Marquer répondue</button>` : ''}
+        <button class="btn-del" onclick="deleteQ(${i})">🗑️ Supprimer</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function markDone(i) {
+  const q = getQ(); q[i].answered = true; saveQ(q); loadQuestions();
+}
+function deleteQ(i) {
+  if (!confirm('Supprimer cette question ?')) return;
+  const q = getQ(); q.splice(i, 1); saveQ(q); loadQuestions();
+}
+function clearAll() {
+  if (!confirm('Effacer TOUTES les questions ?')) return;
+  saveQ([]); loadQuestions();
+}
+
+function exportTxt() {
+  const q = getQ();
+  if (!q.length) { alert('Aucune question à exporter.'); return; }
+  let txt = '=== QUESTIONS POUR MOMO — ' + new Date().toLocaleDateString('fr-FR') + ' ===\n\n';
+  q.forEach((item, i) => {
+    txt += `Q${i+1} — ${item.date}\n"${item.question}"\n${item.answered ? '[Répondue]' : '[En attente]'}\n\n`;
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], {type:'text/plain;charset=utf-8'}));
+  a.download = 'questions-momo.txt'; a.click();
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') login(); });
+</script>
+</body>
+</html>

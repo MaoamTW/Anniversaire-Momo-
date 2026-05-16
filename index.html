@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>🌺 Qui est Momo ? 🌺</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0096c7;--deep:#023e8a;--aqua:#48cae4;
+  --sand:#f4a261;--gold:#ffd166;--coral:#e76f51;
+  --hibis:#e63946;--foam:#e0f7fa;--text:#1b2838;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--foam);min-height:100vh;overflow-x:hidden;}
+
+/* ══ HERO ══ */
+.hero{
+  position:relative;width:100%;
+  background:linear-gradient(180deg,#0096c7 0%,#0077b6 40%,#023e8a 100%);
+  overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 20px 88px;text-align:center;
+}
+.bbl{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);animation:rise linear infinite;}
+@keyframes rise{0%{transform:translateY(120%) scale(.6);opacity:0}10%{opacity:.6}90%{opacity:.4}100%{transform:translateY(-10%) scale(1.4);opacity:0}}
+.sun{position:absolute;top:22px;right:22px;width:56px;height:56px;border-radius:50%;
+  background:radial-gradient(circle at 40% 38%,#ffe066,#ffb700);
+  box-shadow:0 0 0 12px rgba(255,214,0,.14),0 0 0 24px rgba(255,214,0,.06);
+  animation:psun 4s ease-in-out infinite;}
+@keyframes psun{0%,100%{box-shadow:0 0 0 12px rgba(255,214,0,.14),0 0 0 24px rgba(255,214,0,.06)}50%{box-shadow:0 0 0 20px rgba(255,214,0,.2),0 0 0 38px rgba(255,214,0,.09)}}
+.palm-l{position:absolute;bottom:50px;left:-6px;font-size:94px;opacity:.82;transform-origin:bottom center;animation:sway 5s ease-in-out infinite;filter:drop-shadow(0 4px 8px rgba(0,0,0,.28));}
+.palm-r{position:absolute;bottom:50px;right:-6px;font-size:94px;opacity:.82;transform-origin:bottom center;animation:sway 5s ease-in-out infinite reverse;filter:drop-shadow(0 4px 8px rgba(0,0,0,.28));}
+@keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.hero-top{position:relative;z-index:2;margin-top:32px;}
+.hero-flowers{font-size:24px;letter-spacing:5px;margin-bottom:6px;}
+.hero-qui{display:inline-block;background:var(--gold);color:#7b3f00;font-family:'Pacifico',cursive;font-size:clamp(1.3rem,5vw,1.9rem);padding:4px 20px 6px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.22);transform:rotate(-2deg);margin-bottom:2px;}
+.hero-est{font-family:'Pacifico',cursive;font-size:clamp(2.8rem,12vw,5.2rem);color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.22),0 6px 24px rgba(0,0,0,.28);line-height:1;letter-spacing:2px;}
+.hero-est span{color:var(--gold);}
+.hero-sub{color:var(--aqua);font-weight:800;font-size:.95rem;margin-top:7px;letter-spacing:1px;text-transform:uppercase;}
+.hero-badge{position:relative;z-index:2;display:inline-block;margin-top:14px;background:linear-gradient(135deg,var(--coral),var(--hibis));color:#fff;font-weight:900;font-size:.86rem;padding:8px 22px;border-radius:999px;box-shadow:0 4px 16px rgba(231,111,81,.4);letter-spacing:.5px;animation:abounce 2.5s ease-in-out infinite;}
+@keyframes abounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.polaroids{position:relative;z-index:2;display:flex;justify-content:center;align-items:flex-end;gap:10px;margin-top:22px;padding:0 10px;}
+.polaroid{background:#fff;padding:5px 5px 22px;border-radius:3px;box-shadow:0 8px 24px rgba(0,0,0,.32);transform:rotate(var(--rot));flex:0 0 28%;max-width:116px;transition:transform .3s ease;cursor:pointer;}
+.polaroid:nth-child(1){--rot:-6deg}
+.polaroid:nth-child(2){--rot:1.5deg;margin-bottom:10px;z-index:3}
+.polaroid:nth-child(3){--rot:5deg}
+.polaroid:hover{transform:rotate(0deg) scale(1.1) translateY(-6px);}
+.polaroid img{width:100%;height:88px;object-fit:cover;object-position:top;display:block;}
+.p-lbl{text-align:center;font-size:.57rem;font-weight:800;color:#aaa;margin-top:5px;text-transform:uppercase;letter-spacing:1px;}
+.hero-wave{position:absolute;bottom:0;left:0;right:0;height:70px;overflow:hidden;}
+.hero-wave svg{display:block;width:100%;height:100%;}
+
+/* ══ PROFILE ══ */
+.profile{display:flex;flex-direction:column;align-items:center;padding:28px 20px 8px;text-align:center;}
+.avatar-ring{position:relative;width:114px;height:114px;border-radius:50%;background:conic-gradient(var(--gold),var(--coral),var(--gold),var(--coral),var(--gold));padding:4px;box-shadow:0 6px 22px rgba(0,0,0,.17);animation:spin-slow 12s linear infinite;}
+@keyframes spin-slow{to{transform:rotate(360deg)}}
+.avatar-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;background:#ccc;animation:spin-slow 12s linear infinite reverse;}
+.avatar-inner img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;}
+.avatar-lei{position:absolute;top:-13px;right:-15px;font-size:1.6rem;}
+.profile-name{font-family:'Pacifico',cursive;font-size:2rem;color:var(--teal);margin-top:11px;}
+.profile-info{font-size:.87rem;color:#557;max-width:300px;margin:5px auto 0;line-height:1.55;}
+.divider{display:flex;align-items:center;justify-content:center;gap:10px;padding:6px 20px;font-size:1.1rem;letter-spacing:5px;opacity:.5;}
+
+/* ══ TABS — centrés ══ */
+.tabs-wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:14px 14px 8px;}
+.tab{background:#fff;border:2.5px solid transparent;border-radius:999px;padding:8px 15px;font-size:.79rem;font-weight:800;cursor:pointer;color:#555;white-space:nowrap;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.tab.active,.tab:hover{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 4px 14px rgba(0,150,199,.32);}
+
+/* ══ QUESTIONS — centrées ══ */
+.qlist{padding:6px 14px 20px;display:flex;flex-direction:column;gap:10px;max-width:600px;margin:0 auto;width:100%;}
+.sec-title{display:flex;align-items:center;gap:10px;padding:16px 4px 3px;font-family:'Pacifico',cursive;font-size:1.12rem;color:var(--deep);}
+.sec-title::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,var(--aqua),transparent);border-radius:2px;margin-left:4px;}
+.card{background:rgba(255,255,255,.93);border-radius:20px;overflow:hidden;box-shadow:0 4px 18px rgba(0,100,180,.09);border:2px solid transparent;cursor:pointer;opacity:0;transform:translateY(20px);transition:opacity .45s,transform .45s,border-color .2s,box-shadow .2s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card.open{border-color:var(--aqua);box-shadow:0 8px 30px rgba(72,202,228,.25);}
+.card:active{transform:scale(.97);}
+.cq{display:flex;align-items:center;gap:12px;padding:15px 14px;}
+.ico{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--foam),#b2ebf2);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.35rem;box-shadow:inset 0 2px 6px rgba(0,0,0,.05);}
+.ico img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.ico.sq{border-radius:12px;}.ico.sq img{border-radius:10px;object-fit:cover;}
+.ico.cn img{object-fit:contain;border-radius:0;}
+.ctext{flex:1;font-weight:800;font-size:.9rem;color:var(--text);line-height:1.3;}
+.chev{color:var(--aqua);font-size:.88rem;flex-shrink:0;transition:transform .3s;}
+.card.open .chev{transform:rotate(180deg);}
+.ca{display:none;padding:2px 14px 15px 70px;font-size:.87rem;color:#445;line-height:1.65;animation:fdin .25s ease;}
+.card.open .ca{display:block;}
+@keyframes fdin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.ca .ai{width:100%;border-radius:14px;margin-top:10px;max-height:220px;object-fit:cover;display:block;box-shadow:0 4px 14px rgba(0,0,0,.11);}
+.ca .ai.sm{max-height:160px;}
+.ca .ai.tn{max-height:100px;object-fit:contain;background:#f0f0f0;}
+.anec{background:linear-gradient(135deg,#fff8e6,#ffe0b2);border-left:4px solid var(--sand);padding:9px 13px;border-radius:12px;font-style:italic;margin-top:10px;font-size:.85rem;line-height:1.5;}
+.hidden{display:none!important;}
+
+/* ══ SECTION QUESTIONS INVITÉS ══ */
+.ask-section{max-width:600px;margin:30px auto 110px;padding:0 14px;}
+.ask-box{background:#fff;border-radius:24px;box-shadow:0 6px 28px rgba(0,100,180,.12);overflow:hidden;}
+.ask-header{background:linear-gradient(135deg,#0096c7,#023e8a);padding:22px 22px 18px;text-align:center;}
+.ask-header h2{font-family:'Pacifico',cursive;color:#fff;font-size:1.5rem;margin-bottom:5px;}
+.ask-header p{color:var(--aqua);font-size:.84rem;font-weight:700;line-height:1.5;}
+.ask-body{padding:22px 20px 24px;}
+.ask-body label{display:block;font-weight:800;font-size:.82rem;color:var(--deep);margin-bottom:7px;letter-spacing:.3px;}
+.ask-body textarea{width:100%;padding:13px 16px;border:2px solid #dde8f0;border-radius:14px;font-family:'Nunito',sans-serif;font-size:.92rem;color:var(--text);outline:none;resize:none;height:120px;transition:border-color .2s;background:#f8fcff;line-height:1.5;}
+.ask-body textarea:focus{border-color:var(--aqua);}
+.ask-btn{width:100%;margin-top:14px;padding:15px;background:linear-gradient(135deg,var(--coral),var(--hibis));color:#fff;border:none;border-radius:14px;font-family:'Pacifico',cursive;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 16px rgba(231,111,81,.35);transition:transform .2s,box-shadow .2s;}
+.ask-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(231,111,81,.45);}
+.ask-btn:active{transform:scale(.97);}
+.ask-success{display:none;text-align:center;padding:30px 16px;}
+.ask-success .big-emoji{font-size:3.5rem;display:block;margin-bottom:10px;}
+.ask-success p{font-weight:800;color:var(--teal);font-size:1.05rem;line-height:1.6;}
+.ask-count{text-align:center;font-size:.76rem;color:#aaa;padding:0 0 14px;font-weight:700;}
+
+/* ══ FOOTER ══ */
+.footer{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);padding:9px 0 13px;text-align:center;border-top:2px solid #b2ebf2;font-size:.75rem;color:var(--teal);font-weight:800;z-index:99;letter-spacing:.5px;}
+
+/* Floating petals */
+.petal{position:fixed;pointer-events:none;animation:fpetal linear infinite;z-index:50;opacity:0;}
+@keyframes fpetal{0%{opacity:0;transform:translateY(105vh) rotate(0)}10%{opacity:.6}90%{opacity:.4}100%{opacity:0;transform:translateY(-80px) rotate(380deg)}}
+</style>
+</head>
+<body>
+
+<div class="petal" style="font-size:1.8rem;left:4%;animation-duration:13s;animation-delay:0s;">🌺</div>
+<div class="petal" style="font-size:1.1rem;left:17%;animation-duration:9s;animation-delay:2s;">🌸</div>
+<div class="petal" style="font-size:1.6rem;left:74%;animation-duration:15s;animation-delay:4s;">🌺</div>
+<div class="petal" style="font-size:1.3rem;left:87%;animation-duration:10s;animation-delay:7s;">🌸</div>
+<div class="petal" style="font-size:1.9rem;left:46%;animation-duration:17s;animation-delay:1.5s;">🌺</div>
+
+<!-- ════ HERO ════ -->
+<div class="hero">
+  <div class="bbl" style="width:24px;height:24px;left:8%;animation-duration:8s;"></div>
+  <div class="bbl" style="width:14px;height:14px;left:21%;animation-duration:11s;animation-delay:1s;"></div>
+  <div class="bbl" style="width:18px;height:18px;left:61%;animation-duration:7s;animation-delay:2.5s;"></div>
+  <div class="bbl" style="width:10px;height:10px;left:81%;animation-duration:9s;animation-delay:.8s;"></div>
+  <div class="bbl" style="width:30px;height:30px;left:46%;animation-duration:13s;animation-delay:3s;"></div>
+  <div class="sun"></div>
+  <div class="palm-l">🌴</div>
+  <div class="palm-r">🌴</div>
+  <div class="hero-top">
+    <div class="hero-flowers">🌺🌸🌺🌸🌺</div>
+    <div class="hero-qui">Qui est</div>
+    <div class="hero-est"><span>Momo</span> ?</div>
+    <div class="hero-sub">🎉 Anniversaire — 60 ans 🎉</div>
+    <div class="hero-badge">🤙 Aloha &amp; Bonne fête !</div>
+  </div>
+  <div class="polaroids">
+    <div class="polaroid"><img src="https://i.imgur.com/pTQe0p5.jpeg" alt="Momo"><div class="p-lbl"></div></div>
+    <div class="polaroid"><img src="https://i.imgur.com/A4fPOR7.jpeg" alt="Momo"><div class="p-lbl"></div></div>
+    <div class="polaroid"><img src="https://i.imgur.com/R2YwB5X.jpeg" alt="Momo"><div class="p-lbl"></div></div>
+  </div>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,35 C200,70 400,0 600,35 C800,70 1000,0 1200,35 L1200,70 L0,70 Z" fill="#e0f7fa"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ════ PROFILE ════ -->
+<div class="profile">
+  <div class="avatar-ring">
+    <div class="avatar-inner"><img src="https://i.imgur.com/k3N8kcg.png" alt="Momo"></div>
+    <span class="avatar-lei">🌺</span>
+  </div>
+  <div class="profile-name">Momo</div>
+  <p class="profile-info">Né en 1966 à Briey · Grandi au Champs de Mars<br>Maître-nageur · Papa de deux princesses 🎀🎀</p>
+</div>
+
+<div class="divider">🌺 🌸 🌊 🌸 🌺</div>
+
+<!-- ════ TABS ════ -->
+<div class="tabs-wrap">
+  <button class="tab active" onclick="fc('all',this)">🌺 Tout</button>
+  <button class="tab" onclick="fc('enfance',this)">👶 Enfance</button>
+  <button class="tab" onclick="fc('travail',this)">💼 Boulot</button>
+  <button class="tab" onclick="fc('perso',this)">❤️ Perso</button>
+  <button class="tab" onclick="fc('fun',this)">😂 Fun</button>
+  <button class="tab" onclick="fc('sport',this)">🏊 Sport</button>
+</div>
+
+<!-- ════ QUESTIONS ════ -->
+<div class="qlist">
+
+<div class="sec-title" data-sec="enfance">👶 Enfance &amp; Jeunesse</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico">📍</div><div class="ctext">Où est-il né ?</div><div class="chev">▼</div></div>
+  <div class="ca">Il est né à <strong>Briey</strong> !<img src="https://i.imgur.com/a8qk6U0.jpeg" class="ai" alt="Briey"></div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico">📅</div><div class="ctext">En quelle année est-il né ?</div><div class="chev">▼</div></div>
+  <div class="ca">En <strong>1966</strong> ! Pendant que Momo naissait :<br><br>🟦⬜️🟥 De Gaulle dirigeait la France<br><br>🎵 Les Beatles faisaient danser le monde<br><br>⚽ L'Angleterre gagnait la Coupe du monde</div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico">🏘️</div><div class="ctext">Où a-t-il grandi ?</div><div class="chev">▼</div></div>
+  <div class="ca">Au <strong>Champs de Mars</strong> — là où toutes les aventures ont commencé !<img src="https://i.imgur.com/vufYLXA.jpeg" class="ai" alt="Champs de Mars"></div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/YRtLH8q.jpeg" alt=""></div><div class="ctext">Comment était son enfance ?</div><div class="chev">▼</div></div>
+  <div class="ca">Très joyeuse ! Entouré de ses copains, très proche de sa famille — surtout de sa maman qui le <strong>chouchoutait beaucoup</strong>. 🥰<img src="https://i.imgur.com/YRtLH8q.jpeg" class="ai sm" alt="Momo jeune"></div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico">❤️</div><div class="ctext">A-t-il des frères et sœurs ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui : <strong>une sœur et un frère</strong>. ❤️</div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/LdZWR47.jpeg" alt=""></div><div class="ctext">A-t-il toujours voulu être papa ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui, et <strong>uniquement de filles</strong> — objectif réussi ! 🎀🎀<img src="https://i.imgur.com/LdZWR47.jpeg" class="ai" alt="Les 2 filles"></div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/aQIt9y9.jpeg" alt=""></div><div class="ctext">Était-il souvent en retard ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui ! Il devait prendre son bain pendant que Mamie Ginette le recoiffait…<div class="anec">Aucune ressemblance avec sa première fille, bien sûr 😇</div></div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/0drYGJ0.jpeg" alt=""></div><div class="ctext">Comment était-il à l'école ?</div><div class="chev">▼</div></div>
+  <div class="ca">Studieux, mais souvent repris par sa mère pour ses <strong>fautes de langage</strong>. 📚</div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/TqA9Hln.jpeg" alt=""></div><div class="ctext">A-t-il redoublé ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui, avec toute sa bande de copains en primaire — <strong>solidarité avant tout !</strong> 🤝</div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico sq"><img src="https://i.imgur.com/BzrnrzT.jpeg" alt=""></div><div class="ctext">Qu'aimait-il faire étant jeune ?</div><div class="chev">▼</div></div>
+  <div class="ca">Faire des bêtises avec sa bande — des batailles entre clans au Champs de Mars. 🪖<div class="anec">La Guerre des Boutons version locale !</div></div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico">📞</div><div class="ctext">Combien de fois appelle-t-il sa maman ?</div><div class="chev">▼</div></div>
+  <div class="ca">Au <strong>minimum 4 fois par semaine</strong> — un fils en or ! 💛<img src="https://i.imgur.com/HobTDCr.jpeg" class="ai sm" alt="avec maman"></div>
+</div>
+
+<div class="card" data-cat="enfance">
+  <div class="cq" onclick="tog(this)"><div class="ico">👶</div><div class="ctext">Voulait-il un deuxième enfant ?</div><div class="chev">▼</div></div>
+  <div class="ca">Non… la première était déjà <strong>"très sportive"</strong> 😅<img src="https://i.imgur.com/fCwsaM7.jpeg" class="ai sm" alt="avec sa fille"></div>
+</div>
+
+<div class="sec-title" data-sec="travail">💼 Boulot &amp; Carrière</div>
+
+<div class="card" data-cat="travail">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/frDgZxW.jpeg" alt=""></div><div class="ctext">Avait-il un métier de rêve ?</div><div class="chev">▼</div></div>
+  <div class="ca">Il aurait aimé être <strong>agent immobilier</strong>, mais il adorait déjà la natation — le choix était fait ! 🏠</div>
+</div>
+
+<div class="card" data-cat="travail">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/GUhFkdX.jpeg" alt=""></div><div class="ctext">Quel est son métier ?</div><div class="chev">▼</div></div>
+  <div class="ca"><strong>Maître-nageur !</strong> Il a fait de très belles rencontres avec ses collègues — et ils ne se sont jamais quittés. 🤝<img src="https://i.imgur.com/GUhFkdX.jpeg" class="ai" alt="collègues piscine"></div>
+</div>
+
+<div class="card" data-cat="travail">
+  <div class="cq" onclick="tog(this)"><div class="ico">🔄</div><div class="ctext">A-t-il changé de travail ?</div><div class="chev">▼</div></div>
+  <div class="ca">Non — toujours <strong>fidèle à son poste</strong>. Un homme de conviction ! 💪</div>
+</div>
+
+<div class="card" data-cat="travail">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/SPVvoQN.jpeg" alt=""></div><div class="ctext">De quoi est-il le plus fier dans son métier ?</div><div class="chev">▼</div></div>
+  <div class="ca">D'avoir <strong>sauvé un enfant</strong>. 🏅 Un moment inoubliable.</div>
+</div>
+
+<div class="card" data-cat="travail">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/B5B8Jpu.jpeg" alt=""></div><div class="ctext">A-t-il le permis ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui, grâce à l'armée en <strong>Corse</strong>… et ça se voit encore aujourd'hui. 🏝️<img src="https://i.imgur.com/B5B8Jpu.jpeg" class="ai" alt="Corse"></div>
+</div>
+
+<div class="sec-title" data-sec="perso">❤️ Vie Personnelle</div>
+
+<div class="card" data-cat="perso">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/zePHkbw.jpeg" alt=""></div><div class="ctext">Comment a-t-il rencontré Cricri ?</div><div class="chev">▼</div></div>
+  <div class="ca">À la piscine ! En vrai prince charmant, il est allé frapper chez la famille…<div class="anec">Mais il s'est trompé de sœur 😂 Résultat : les plus beaux enfants du monde !</div><img src="https://i.imgur.com/zePHkbw.jpeg" class="ai" alt="Momo et Cricri"></div>
+</div>
+
+<div class="card" data-cat="perso">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/4zhr3We.jpeg" alt=""></div><div class="ctext">Depuis combien de temps sont-ils ensemble ?</div><div class="chev">▼</div></div>
+  <div class="ca">Depuis <strong>très longtemps…</strong> Personne ne misait sur leur couple → les plus beaux enfants du monde !<img src="https://i.imgur.com/4zhr3We.jpeg" class="ai sm" alt="soirée"></div>
+</div>
+
+<div class="card" data-cat="perso">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/l1uDaAk.jpeg" alt=""></div><div class="ctext">Ses qualités ?</div><div class="chev">▼</div></div>
+  <div class="ca">Bienveillant, sociable, toujours de bonne humeur, avec de <strong>belles valeurs</strong>. 😇<img src="https://i.imgur.com/l1uDaAk.jpeg" class="ai sm" alt="Momo et son chat"></div>
+</div>
+
+<div class="card" data-cat="perso">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/wXOIGpM.jpeg" alt=""></div><div class="ctext">Ses défauts ?</div><div class="chev">▼</div></div>
+  <div class="ca">Capricieux, têtu, très (trop) minutieux en bricolage… et totalement nul en cuisine et ménage — il salit plus qu'il ne nettoie ! 🍳🧹</div>
+</div>
+
+<div class="card" data-cat="perso">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/DsWDE1D.jpeg" alt=""></div><div class="ctext">Ses habitudes drôles ?</div><div class="chev">▼</div></div>
+  <div class="ca">Vérifier <strong>100 fois</strong> que tout est éteint ou que la voiture est bien fermée. 🚗🔒<img src="https://i.imgur.com/DsWDE1D.jpeg" class="ai sm" alt="clé voiture"></div>
+</div>
+
+<div class="card" data-cat="perso">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="IMGUR_EMOJI_DODO" alt=""></div><div class="ctext">Ses moments préférés ?</div><div class="chev">▼</div></div>
+  <div class="ca">La <strong>sieste de l'après-midi</strong>. Sans négociation. ZZZzzz 😴</div>
+</div>
+
+<div class="card" data-cat="perso">
+  <div class="cq" onclick="tog(this)"><div class="ico">👶</div><div class="ctext">Les plus beaux souvenirs de sa vie ?</div><div class="chev">▼</div></div>
+  <div class="ca">La naissance de ses <strong>deux princesses</strong> (enfin j'espère 😅) 🎀<img src="https://i.imgur.com/pkDFYPV.jpeg" class="ai sm" alt="naissance 1"><img src="https://i.imgur.com/6cPnYhJ.jpeg" class="ai sm" alt="naissance 2"></div>
+</div>
+
+<div class="sec-title" data-sec="fun">😂 Fun &amp; Anecdotes</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/be8287I.jpeg" alt=""></div><div class="ctext">Son état d'esprit ?</div><div class="chev">▼</div></div>
+  <div class="ca">Toujours <strong>le sourire</strong> ! 😁<img src="https://i.imgur.com/be8287I.jpeg" class="ai" alt="Momo sourire"></div>
+</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/zdfcqEH.png" alt=""></div><div class="ctext">A-t-il fait des bêtises ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui, beaucoup… toujours avec les mêmes copains. Exemple : voler dans un magasin. 😬</div>
+</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico">🖊️</div><div class="ctext">A-t-il un tatouage ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui : <strong>un point noir sur la main</strong>, fait maison avec de l'encre de Chine. 🖤</div>
+</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/zvyxUqr.jpeg" alt=""></div><div class="ctext">Ses phrases cultes ?</div><div class="chev">▼</div></div>
+  <div class="ca">Aucune… il préfère <strong>recopier celles des autres</strong>. 🐒<img src="https://i.imgur.com/zvyxUqr.jpeg" class="ai" alt="Momo singe"></div>
+</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico cn"><img src="https://i.imgur.com/bqatSWu.png" alt=""></div><div class="ctext">Son site préféré ?</div><div class="chev">▼</div></div>
+  <div class="ca"><strong>Amazon</strong> — le grand amour. 📦📦📦</div>
+</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/zH4cNWx.jpeg" alt=""></div><div class="ctext">Ce qui le fait rire ?</div><div class="chev">▼</div></div>
+  <div class="ca">Ses <strong>propres bêtises</strong>. 😂<img src="https://i.imgur.com/zH4cNWx.jpeg" class="ai" alt="Momo rit"></div>
+</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/9QOdQwj.jpeg" alt=""></div><div class="ctext">Une anecdote mémorable ?</div><div class="chev">▼</div></div>
+  <div class="ca"><div class="anec">En vacances à Toulouse avec la bande des Tuche, il a un peu trop forcé sur l'alcool (il ne le tient vraiment pas)… résultat : il n'a plus touché une goutte pendant <strong>six mois !</strong> 🤢</div></div>
+</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/CEY3Uja.jpeg" alt=""></div><div class="ctext">Un souvenir avec ses filles ?</div><div class="chev">▼</div></div>
+  <div class="ca"><div class="anec">Ils se sont incrustés dans un camping pour profiter des piscines — et Momo avait l'excuse parfaite : surveiller le bassin 😂</div><img src="IMGUR_CAMPING_PISCINE" class="ai" alt="camping"></div>
+</div>
+
+<div class="card" data-cat="fun">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/MsMbtUc.jpeg" alt=""></div><div class="ctext">Ce qu'il aime faire ?</div><div class="chev">▼</div></div>
+  <div class="ca">Embêter les autres (son sport national 😏) et <strong>bricoler</strong> — il a tout appris tout seul !<img src="https://i.imgur.com/MsMbtUc.jpeg" class="ai" alt="famille"></div>
+</div>
+
+<div class="sec-title" data-sec="sport">🏊 Sport</div>
+
+<div class="card" data-cat="sport">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/k3N8kcg.png" alt=""></div><div class="ctext">Faisait-il du sport jeune ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui : <strong>natation, water-polo et handball</strong>. Un vrai athlète ! 💪<img src="https://i.imgur.com/fQSSXbh.jpeg" class="ai" alt="Momo sport jeune"></div>
+</div>
+
+<div class="card" data-cat="sport">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/mwW1pet.jpeg" alt=""></div><div class="ctext">Son sport préféré ?</div><div class="chev">▼</div></div>
+  <div class="ca">Le <strong>water-polo</strong> — au point d'y laisser son nez. 👃<img src="https://i.imgur.com/mwW1pet.jpeg" class="ai sm" alt="water polo"></div>
+</div>
+
+<div class="card" data-cat="sport">
+  <div class="cq" onclick="tog(this)"><div class="ico"><img src="https://i.imgur.com/R1y02iv.jpeg" alt=""></div><div class="ctext">Fait-il encore du sport aujourd'hui ?</div><div class="chev">▼</div></div>
+  <div class="ca">Oui, de la natation… environ <strong>une fois par an</strong> 😂<br>(Il n'aime pas trop se mouiller les cheveux.)<img src="https://i.imgur.com/R1y02iv.jpeg" class="ai" alt="Momo natation"></div>
+</div>
+
+</div><!-- /qlist -->
+
+<!-- ════ SECTION QUESTIONS INVITÉS ════ -->
+<div class="ask-section">
+  <div class="ask-box">
+    <div class="ask-header">
+      <h2>🌺 À vous de jouer !</h2>
+      <p>Posez-lui toutes vos questions — les plus drôles comme les plus indiscrètes.<br>À 16h, Momo répondra à tout ! 🎤</p>
+    </div>
+    <div class="ask-body" id="ask-form">
+      <label>Votre question pour Momo 🌊</label>
+      <textarea id="inp-question" placeholder="Ex : Momo, c'est vrai que tu vérifies 100 fois que la voiture est fermée ?"></textarea>
+      <button class="ask-btn" onclick="sendQuestion()">🌺 Envoyer ma question !</button>
+    </div>
+    <div class="ask-success" id="ask-success">
+      <span class="big-emoji">🌺</span>
+      <p>Ta question a bien été envoyée !<br>Momo répondra à 16h 🎤</p>
+      <button class="ask-btn" onclick="resetForm()" style="margin-top:16px;font-size:.95rem;padding:12px;">➕ Poser une autre question</button>
+    </div>
+    <div class="ask-count" id="ask-count"></div>
+  </div>
+</div>
+
+<div class="footer">🌺 &nbsp; Aloha Momo — 60 ans de bonheur &nbsp; 🌺</div>
+
+<script>
+function tog(btn){const c=btn.closest('.card'),o=c.classList.contains('open');document.querySelectorAll('.card.open').forEach(x=>x.classList.remove('open'));if(!o)c.classList.add('open');}
+function fc(cat,btn){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.card').forEach(c=>{const h=cat!=='all'&&c.dataset.cat!==cat;c.classList.toggle('hidden',h);if(h)c.classList.remove('open');});document.querySelectorAll('.sec-title').forEach(s=>s.style.display=cat==='all'?'':'none');}
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('vis'),i*38);obs.unobserve(e.target);}});},{threshold:.04});
+document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+
+function getQ(){try{return JSON.parse(localStorage.getItem('momo_questions')||'[]');}catch(e){return[];}}
+function saveQ(q){localStorage.setItem('momo_questions',JSON.stringify(q));}
+
+function updateCount(){const q=getQ();const el=document.getElementById('ask-count');if(el&&q.length>0)el.textContent=q.length+' question'+(q.length>1?'s':'')+' déjà posée'+(q.length>1?'s':'')+' 🌺';}
+function resetForm(){document.getElementById('inp-question').value='';document.getElementById('ask-success').style.display='none';document.getElementById('ask-form').style.display='block';}
+
+function sendQuestion(){
+  const question=document.getElementById('inp-question').value.trim();
+  if(!question){
+    const ta=document.getElementById('inp-question');
+    ta.style.borderColor='#e63946';ta.focus();
+    setTimeout(()=>ta.style.borderColor='',1500);return;
+  }
+  const q=getQ();
+  q.push({question:question,date:new Date().toLocaleString('fr-FR')});
+  saveQ(q);
+  document.getElementById('ask-form').style.display='none';
+  document.getElementById('ask-success').style.display='block';
+  updateCount();
+}
+updateCount();
+</script>
+</body>
+</html>
