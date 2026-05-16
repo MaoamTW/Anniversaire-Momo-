@@ -108,12 +108,11 @@ body{font-family:'Nunito',sans-serif;background:#f0f4f8;min-height:100vh;}
 // ════════════════════════════
 // CHANGE LE MOT DE PASSE ICI
 const MOT_DE_PASSE = "momo60ans";
-const SESSION_DUREE = 30 * 60 * 1000; // 30 minutes en ms
+const SESSION_DUREE = 30 * 60 * 1000;
 // ════════════════════════════
 
 let timerInterval = null;
 
-// ── Vérifier session au chargement ──
 window.addEventListener('load', () => {
   const expiry = localStorage.getItem('momo_admin_expiry');
   if (expiry && Date.now() < parseInt(expiry)) {
@@ -141,7 +140,6 @@ function showAdmin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-panel').style.display = 'block';
   loadQuestions();
-  setInterval(loadQuestions, 15000);
 }
 
 function logout() {
@@ -155,105 +153,107 @@ function logout() {
 function startTimer(remainingMs) {
   clearInterval(timerInterval);
   let remaining = Math.floor(remainingMs / 1000);
-
   function tick() {
-    if (remaining <= 0) {
-      clearInterval(timerInterval);
-      logout();
-      return;
-    }
+    if (remaining <= 0) { clearInterval(timerInterval); logout(); return; }
     const m = Math.floor(remaining / 60);
     const s = remaining % 60;
-    document.getElementById('session-timer').textContent =
-      String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    document.getElementById('session-timer').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
     remaining--;
   }
   tick();
   timerInterval = setInterval(tick, 1000);
 }
 
-// ── API Google Apps Script ──
-const API = 'https://script.google.com/macros/s/AKfycbwp-ve_I2aWtMyQYUETNz5vtR-EBDlyQRCG3EZPc7h_1koDi92blMxeXTF0JVw1gsDr/exec';
-
-function loadQuestions() {
-  const list = document.getElementById('q-list');
-  list.innerHTML = '<div class="q-empty"><span class="big">🌊</span>Chargement…</div>';
-
-  fetch(API + '?action=get')
-    .then(r => r.json())
-    .then(questions => {
-      const n = questions.length;
-      document.getElementById('admin-subtitle').textContent =
-        n === 0 ? 'Aucune question pour l\'instant…'
-        : n + ' question' + (n>1?'s':'') + ' reçue' + (n>1?'s':'') + ' 🎤';
-      document.getElementById('toolbar-count').textContent = n + ' question' + (n>1?'s':'');
-
-      if (n === 0) {
-        list.innerHTML = '<div class="q-empty"><span class="big">🌊</span>Aucune question pour l\'instant.<br>Les invités n\'ont pas encore écrit !</div>';
-        return;
-      }
-
-      list.innerHTML = '';
-      // Newest first
-      [...questions].reverse().forEach((q) => {
-        const div = document.createElement('div');
-        div.className = 'q-card' + (q.answered ? ' answered' : '');
-        div.innerHTML = `
-          <div class="q-num">Question #${q.id}</div>
-          <div class="q-meta">
-            <span style="font-size:.75rem;color:#888;font-weight:700;">🕐 ${esc(String(q.date))}</span>
-            <span>${q.answered ? '<span class="answered-badge">✅ Répondue</span>' : ''}</span>
-          </div>
-          <div class="q-text">${esc(q.question)}</div>
-          <div class="q-actions">
-            ${!q.answered ? `<button class="btn-done" onclick="markDone(${q.id})">✅ Marquer répondue</button>` : ''}
-            <button class="btn-del" onclick="deleteQ(${q.id})">🗑️ Supprimer</button>
-          </div>
-        `;
-        list.appendChild(div);
-      });
-    })
-    .catch(() => {
-      list.innerHTML = '<div class="q-empty"><span class="big">⚠️</span>Erreur de connexion.<br>Vérifie ta connexion et réessaie.</div>';
-    });
-}
-
-function markDone(id) {
-  if(!confirm('Marquer cette question comme répondue ?')) return;
-  fetch(API + '?action=answer&id=' + id)
-    .then(() => loadQuestions())
-    .catch(() => alert('Erreur, réessaie.'));
-}
-
-function deleteQ(id) {
-  if (!confirm('Supprimer cette question ?')) return;
-  fetch(API + '?action=delete&id=' + id)
-    .then(() => loadQuestions())
-    .catch(() => alert('Erreur, réessaie.'));
-}
-
-
-function exportTxt() {
-  fetch(API + '?action=get')
-    .then(r => r.json())
-    .then(questions => {
-      if (!questions.length) { alert('Aucune question à exporter.'); return; }
-      let txt = '=== QUESTIONS POUR MOMO — ' + new Date().toLocaleDateString('fr-FR') + ' ===\n\n';
-      questions.forEach(item => {
-        txt += `Q${item.id} — ${item.date}\n"${item.question}"\n${item.answered ? '[Répondue]' : '[En attente]'}\n\n`;
-      });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([txt], {type:'text/plain;charset=utf-8'}));
-      a.download = 'questions-momo.txt'; a.click();
-    })
-    .catch(() => alert('Erreur lors de l\'export.'));
-}
+document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') login(); });
 
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+</script>
 
-document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') login(); });
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, onValue, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+const firebaseConfig = {
+  databaseURL: 'https://serveur-momo-default-rtdb.europe-west1.firebasedatabase.app'
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Écoute en temps réel — se met à jour automatiquement dès qu'une question arrive
+function loadQuestions() {
+  const list = document.getElementById('q-list');
+  list.innerHTML = '<div class="q-empty"><span class="big">🌊</span>Chargement…</div>';
+
+  onValue(ref(db, 'questions'), (snapshot) => {
+    const data = snapshot.val();
+    const questions = data
+      ? Object.entries(data).map(([key, val]) => ({ key, ...val })).reverse()
+      : [];
+
+    const n = questions.length;
+    document.getElementById('admin-subtitle').textContent =
+      n === 0 ? 'Aucune question pour l\'instant…'
+      : n + ' question' + (n>1?'s':'') + ' reçue' + (n>1?'s':'') + ' 🎤';
+    document.getElementById('toolbar-count').textContent = n + ' question' + (n>1?'s':'');
+
+    if (n === 0) {
+      list.innerHTML = '<div class="q-empty"><span class="big">🌊</span>Aucune question pour l\'instant.<br>Les invités n\'ont pas encore écrit !</div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    questions.forEach((q, i) => {
+      const div = document.createElement('div');
+      div.className = 'q-card' + (q.answered ? ' answered' : '');
+      div.innerHTML = `
+        <div class="q-num">Question #${n - i}</div>
+        <div class="q-meta">
+          <span style="font-size:.75rem;color:#888;font-weight:700;">🕐 ${esc(q.date)}</span>
+          <span>${q.answered ? '<span class="answered-badge">✅ Répondue</span>' : ''}</span>
+        </div>
+        <div class="q-text">${esc(q.question)}</div>
+        <div class="q-actions">
+          ${!q.answered ? `<button class="btn-done" onclick="markDone('${q.key}')">✅ Marquer répondue</button>` : ''}
+          <button class="btn-del" onclick="deleteQ('${q.key}')">🗑️ Supprimer</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  });
+}
+
+window.markDone = function(key) {
+  if(!confirm('Marquer cette question comme répondue ?')) return;
+  update(ref(db, 'questions/' + key), { answered: true });
+};
+
+window.deleteQ = function(key) {
+  if(!confirm('Supprimer cette question ?')) return;
+  remove(ref(db, 'questions/' + key));
+};
+
+window.exportTxt = function() {
+  const list = document.getElementById('q-list');
+  const cards = list.querySelectorAll('.q-card');
+  if (!cards.length) { alert('Aucune question à exporter.'); return; }
+  let txt = '=== QUESTIONS POUR MOMO — ' + new Date().toLocaleDateString('fr-FR') + ' ===\n\n';
+  cards.forEach((card, i) => {
+    const q = card.querySelector('.q-text').textContent;
+    const d = card.querySelector('span[style]').textContent.replace('🕐 ','');
+    const answered = card.classList.contains('answered');
+    txt += `Q${i+1} — ${d}\n"${q}"\n${answered ? '[Répondue]' : '[En attente]'}\n\n`;
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], {type:'text/plain;charset=utf-8'}));
+  a.download = 'questions-momo.txt'; a.click();
+};
+
+// Démarrer l'écoute
+loadQuestions();
+</script>
 </script>
 </body>
 </html>
