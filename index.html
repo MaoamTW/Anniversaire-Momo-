@@ -396,11 +396,22 @@ body{font-family:'Nunito',sans-serif;background:var(--foam);min-height:100vh;ove
 
 <div class="footer">🌺 &nbsp; Aloha Momo — 60 ans de bonheur &nbsp; 🌺</div>
 
-<script>
-const API = 'https://script.google.com/macros/s/AKfycbwp-ve_I2aWtMyQYUETNz5vtR-EBDlyQRCG3EZPc7h_1koDi92blMxeXTF0JVw1gsDr/exec';
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, push } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+const firebaseConfig = {
+  databaseURL: 'https://serveur-momo-default-rtdb.europe-west1.firebasedatabase.app'
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 function tog(btn){const c=btn.closest('.card'),o=c.classList.contains('open');document.querySelectorAll('.card.open').forEach(x=>x.classList.remove('open'));if(!o)c.classList.add('open');}
+window.tog = tog;
+
 function fc(cat,btn){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.card').forEach(c=>{const h=cat!=='all'&&c.dataset.cat!==cat;c.classList.toggle('hidden',h);if(h)c.classList.remove('open');});document.querySelectorAll('.sec-title').forEach(s=>s.style.display=cat==='all'?'':'none');}
+window.fc = fc;
+
 const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('vis'),i*38);obs.unobserve(e.target);}});},{threshold:.04});
 document.querySelectorAll('.card').forEach(c=>obs.observe(c));
 
@@ -408,7 +419,11 @@ function resetForm(){
   document.getElementById('inp-question').value='';
   document.getElementById('ask-success').style.display='none';
   document.getElementById('ask-form').style.display='block';
+  const btn = document.querySelector('.ask-btn');
+  btn.textContent = '🌺 Envoyer ma question !';
+  btn.disabled = false;
 }
+window.resetForm = resetForm;
 
 function sendQuestion(){
   const question = document.getElementById('inp-question').value.trim();
@@ -418,17 +433,14 @@ function sendQuestion(){
     setTimeout(()=>ta.style.borderColor='', 1500);
     return;
   }
-
-  // Désactive le bouton pendant l'envoi
   const btn = document.querySelector('.ask-btn');
   btn.textContent = '🌊 Envoi en cours…';
   btn.disabled = true;
 
-  fetch(API, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({question: question})
+  push(ref(db, 'questions'), {
+    question: question,
+    date: new Date().toLocaleString('fr-FR'),
+    answered: false
   })
   .then(() => {
     document.getElementById('ask-form').style.display='none';
@@ -440,6 +452,7 @@ function sendQuestion(){
     alert('Erreur d\'envoi, réessaie !');
   });
 }
+window.sendQuestion = sendQuestion;
 </script>
 </body>
 </html>
