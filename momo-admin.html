@@ -172,68 +172,81 @@ function startTimer(remainingMs) {
   timerInterval = setInterval(tick, 1000);
 }
 
-// ── Questions ──
-function getQ() { try { return JSON.parse(localStorage.getItem('momo_questions') || '[]'); } catch(e) { return []; } }
-function saveQ(q) { localStorage.setItem('momo_questions', JSON.stringify(q)); }
+// ── API Google Apps Script ──
+const API = 'https://script.google.com/macros/s/AKfycbwp-ve_I2aWtMyQYUETNz5vtR-EBDlyQRCG3EZPc7h_1koDi92blMxeXTF0JVw1gsDr/exec';
 
 function loadQuestions() {
-  const questions = getQ();
-  const n = questions.length;
-  document.getElementById('admin-subtitle').textContent =
-    n === 0 ? 'Aucune question pour l\'instant…'
-    : n + ' question' + (n>1?'s':'') + ' reçue' + (n>1?'s':'') + ' 🎤';
-  document.getElementById('toolbar-count').textContent = n + ' question' + (n>1?'s':'');
-
   const list = document.getElementById('q-list');
-  if (n === 0) {
-    list.innerHTML = '<div class="q-empty"><span class="big">🌊</span>Aucune question pour l\'instant.<br>Les invités n\'ont pas encore écrit !</div>';
-    return;
-  }
+  list.innerHTML = '<div class="q-empty"><span class="big">🌊</span>Chargement…</div>';
 
-  list.innerHTML = '';
-  // Newest first
-  [...questions].reverse().forEach((q, ri) => {
-    const i = n - 1 - ri;
-    const div = document.createElement('div');
-    div.className = 'q-card' + (q.answered ? ' answered' : '');
-    div.innerHTML = `
-      <div class="q-num">Question #${i+1}</div>
-      <div class="q-meta">
-        <span style="font-size:.75rem;color:#888;font-weight:700;">🕐 ${esc(q.date)}</span>
-        <span class="q-date">${q.answered ? '<span class="answered-badge">✅ Répondue</span>' : ''}</span>
-      </div>
-      <div class="q-text">${esc(q.question)}</div>
-      <div class="q-actions">
-        ${!q.answered ? `<button class="btn-done" onclick="markDone(${i})">✅ Marquer répondue</button>` : ''}
-        <button class="btn-del" onclick="deleteQ(${i})">🗑️ Supprimer</button>
-      </div>
-    `;
-    list.appendChild(div);
-  });
+  fetch(API + '?action=get')
+    .then(r => r.json())
+    .then(questions => {
+      const n = questions.length;
+      document.getElementById('admin-subtitle').textContent =
+        n === 0 ? 'Aucune question pour l\'instant…'
+        : n + ' question' + (n>1?'s':'') + ' reçue' + (n>1?'s':'') + ' 🎤';
+      document.getElementById('toolbar-count').textContent = n + ' question' + (n>1?'s':'');
+
+      if (n === 0) {
+        list.innerHTML = '<div class="q-empty"><span class="big">🌊</span>Aucune question pour l\'instant.<br>Les invités n\'ont pas encore écrit !</div>';
+        return;
+      }
+
+      list.innerHTML = '';
+      // Newest first
+      [...questions].reverse().forEach((q) => {
+        const div = document.createElement('div');
+        div.className = 'q-card' + (q.answered ? ' answered' : '');
+        div.innerHTML = `
+          <div class="q-num">Question #${q.id}</div>
+          <div class="q-meta">
+            <span style="font-size:.75rem;color:#888;font-weight:700;">🕐 ${esc(String(q.date))}</span>
+            <span>${q.answered ? '<span class="answered-badge">✅ Répondue</span>' : ''}</span>
+          </div>
+          <div class="q-text">${esc(q.question)}</div>
+          <div class="q-actions">
+            ${!q.answered ? `<button class="btn-done" onclick="markDone(${q.id})">✅ Marquer répondue</button>` : ''}
+            <button class="btn-del" onclick="deleteQ(${q.id})">🗑️ Supprimer</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    })
+    .catch(() => {
+      list.innerHTML = '<div class="q-empty"><span class="big">⚠️</span>Erreur de connexion.<br>Vérifie ta connexion et réessaie.</div>';
+    });
 }
 
-function markDone(i) {
-  const q = getQ(); q[i].answered = true; saveQ(q); loadQuestions();
+function markDone(id) {
+  if(!confirm('Marquer cette question comme répondue ?')) return;
+  fetch(API + '?action=answer&id=' + id)
+    .then(() => loadQuestions())
+    .catch(() => alert('Erreur, réessaie.'));
 }
-function deleteQ(i) {
+
+function deleteQ(id) {
   if (!confirm('Supprimer cette question ?')) return;
-  const q = getQ(); q.splice(i, 1); saveQ(q); loadQuestions();
+  fetch(API + '?action=delete&id=' + id)
+    .then(() => loadQuestions())
+    .catch(() => alert('Erreur, réessaie.'));
 }
-function clearAll() {
-  if (!confirm('Effacer TOUTES les questions ?')) return;
-  saveQ([]); loadQuestions();
-}
+
 
 function exportTxt() {
-  const q = getQ();
-  if (!q.length) { alert('Aucune question à exporter.'); return; }
-  let txt = '=== QUESTIONS POUR MOMO — ' + new Date().toLocaleDateString('fr-FR') + ' ===\n\n';
-  q.forEach((item, i) => {
-    txt += `Q${i+1} — ${item.date}\n"${item.question}"\n${item.answered ? '[Répondue]' : '[En attente]'}\n\n`;
-  });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([txt], {type:'text/plain;charset=utf-8'}));
-  a.download = 'questions-momo.txt'; a.click();
+  fetch(API + '?action=get')
+    .then(r => r.json())
+    .then(questions => {
+      if (!questions.length) { alert('Aucune question à exporter.'); return; }
+      let txt = '=== QUESTIONS POUR MOMO — ' + new Date().toLocaleDateString('fr-FR') + ' ===\n\n';
+      questions.forEach(item => {
+        txt += `Q${item.id} — ${item.date}\n"${item.question}"\n${item.answered ? '[Répondue]' : '[En attente]'}\n\n`;
+      });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([txt], {type:'text/plain;charset=utf-8'}));
+      a.download = 'questions-momo.txt'; a.click();
+    })
+    .catch(() => alert('Erreur lors de l\'export.'));
 }
 
 function esc(s) {
